@@ -7,8 +7,11 @@ from base64 import b64encode
 class Crawler:
     def __init__(self, url):
         self.url = url
+        self.load_page(url)
 
-        page_source = Utils.get_HTML('samples/homepage.html')
+    def load_page(self, url):
+        # page_source = Utils.get_HTML('samples/homepage.html')
+        page_source = Utils.get_HTML('samples/product_catalog.html')
         # page_source = Utils.fetch_source(self.url)
         self.soup = BeautifulSoup(page_source, 'html.parser')
 

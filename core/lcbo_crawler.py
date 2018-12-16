@@ -14,7 +14,8 @@ class LCBOCrawler(Crawler):
             parent = dd.a.get_text()
 
             # TODO: Make more generic
-            if parent not in ['Coolers', 'Beer & Cider', 'Spirits', 'Wine']: continue
+            # if parent not in ['Coolers', 'Beer & Cider', 'Spirits', 'Wine']: continue
+            if parent not in ['Beer & Cider']: continue
             print(parent)
 
             # If there is no submenu, just move on
