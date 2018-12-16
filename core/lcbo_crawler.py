@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from core.crawler import *
+from core.product_catalog import *
 
 class LCBOCrawler(Crawler):
 
@@ -41,6 +42,19 @@ class LCBOCrawler(Crawler):
 
         # Let's just write out the links to visit
         for key in visit_map.keys():
+
+            # TODO: Create product top level category
             print(key)
+
             for m in visit_map[key]:
-                print (m)
+
+                # We want to skip the 'All' pages
+                if m['top'] == 'Show All': continue
+
+                # TODO: Create product sub level category as category and subcategory
+
+                # Run the catalog crawler using the catalog url
+                # NOTE: remove the last 7 chars, /lcbo/catalog/bock/11090
+                src = m['src'][:-7]
+                print('Creating catalog for ' + src)
+                ProductCatalog(self.base_url + src).crawl()

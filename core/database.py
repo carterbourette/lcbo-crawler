@@ -7,6 +7,10 @@
 #
 import mysql.connector
 
+USERNAME = 'root'
+USERPASS = 'sys'
+DATABASE = 'beerlist'
+
 class Database:
 
     def __init__(self, DBErrorHandler = None):

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import re
-
 from core.crawler import *
 from core.product import *
 
@@ -12,9 +11,7 @@ class ProductListing(Crawler):
 
         # Image
         image = self.soup.select_one('.images img')['src']
-
-        img_url = 'http://www.lcbo.com' + image
-
+        img_url = self.base_url + image
         image = Utils.fetch_source(img_url, stream=True)
 
         # retrieve and print just the sku number
@@ -25,15 +22,14 @@ class ProductListing(Crawler):
         # Get product decription
         prod_description = self.select_one('.description blockquote')
 
+        # TODO: FIX THIS
         # Get price value
-        prod_cur_price = self.select_one('.price .price-value')
+        try:    prod_cur_price = self.select_one('.price .price-value')[1:]
+        except: prod_cur_price = None
 
         # Attempt to find a saving price, if it exists, save it
         prod_saving = self.select('.price .saving')
-        if prod_saving:
-            prod_saving = prod_saving[-1].get_text().strip()
-        else:
-            prod_saving = None
+        prod_saving = prod_saving[-1].get_text().strip() if prod_saving else None
 
         # Attempt to find a offer expiration date, if it exists, save it
         prod_LTO_end_date = self.select_one('.price .lto-end-date')
@@ -65,22 +61,28 @@ class ProductListing(Crawler):
         for i in range(2, len(s), 2):
             details_map[s[i]] = s[i+1]
 
+        # TODO: Fix me some more
+        alcohol_vol = details_map.get('Alcohol/Vol',None)
+        if alcohol_vol is not None:
+            alcohol_vol = alcohol_vol[:-1]
+
         # Create the object
         product = Product(
             category = None,
             name = prod_name,
-            image = image,
+            img = image,
             sku = sku_reg_response,
             description = prod_description,
             price = prod_cur_price,
             size = prod_size,
             container = prod_container,
-            alcohol_vol = details_map['Alcohol/Vol'],
-            country = details_map['Made in:'],
-            brewery = details_map['By:'],
-            style = details_map['Style:'],
+            alcohol = alcohol_vol,
+            country = details_map.get('Made in:',None),
+            brewery = details_map.get('By:',None),
+            style = details_map.get('Style:',None),
 
             saving = prod_saving,
             expiration = LTO_reg_response
         )
         print(product)
+        product.save()
