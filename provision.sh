@@ -10,4 +10,8 @@ sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again p
 sudo apt-get -y install mysql-server
 
 mysql -uroot -psys -e 'create database beerlist;'
-mysql -uroot -psys < schema.sql
+mysql -uroot -psys < /var/www/schema.sql
+
+sudo apt-get install -y python3-pip
+
+sudo -H python3 -m pip install pipenv

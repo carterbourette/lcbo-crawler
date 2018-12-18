@@ -8,7 +8,6 @@ pip = "*"
 requests = "*"
 "beautifulsoup4" = "*"
 mysql-connector = "*"
-mysql = "*"
 
 [dev-packages]
 
